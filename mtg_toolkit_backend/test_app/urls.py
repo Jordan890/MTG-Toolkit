@@ -21,5 +21,6 @@ urlpatterns = [
     path('api/update-card/<str:cardId>',test_put_card, name="edit_card_details"),
     path('api/update-deck/<str:deckId>',edit_deck, name="edit_deck"),
     path('api/delete-card/<str:cardId>',test_delete_card, name="delete_card_details"),
+    path('api/delete-deck/<str:deckId>',delete_deck, name="delete_deck"),
     path('api-auth/', include('rest_framework.urls'))
 ]

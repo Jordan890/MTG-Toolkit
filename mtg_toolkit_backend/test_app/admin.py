@@ -3,7 +3,7 @@ from .models import Card, Deck
 # Register your models here.
 
 class CardInline(admin.TabularInline):
-    model = Card.decks.through
+    model = Deck.cards.through
 
 class CardAdmin(admin.ModelAdmin):
     model = Card

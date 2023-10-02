@@ -46,7 +46,7 @@ def create_deck(request):
     cardIds = request.data['cardsToAdd']
     for cardId in cardIds:
         card = Card.objects.get(id=cardId)
-        card.decks.add(deck)
+        deck.cards.add(card)
     return Response(deckSerializer.data)
 
 @api_view(['PUT'])
@@ -63,10 +63,26 @@ def edit_deck(request,deckId):
     serializer = DeckSerializer(deck,request.data)
     serializer.is_valid(raise_exception=True)
     deck = serializer.save()
+    cardIdsToAdd = request.data['cardsToAdd']
+    cardIdsToDelete = request.data['cardsToDelete']
+    for id in cardIdsToAdd:
+        if(id not in deck.cards.all()):
+            card = Card.objects.get(id=id)
+            deck.cards.add(card)
+    for id in cardIdsToDelete:
+        card = Card.objects.get(id=id)
+        deck.cards.remove(card)
+
     return Response(serializer.data)
 
 @api_view(['DELETE'])
 def test_delete_card(request,cardId):
     card = Card.objects.get(id=cardId)
     card.delete()
+    return Response(status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_deck(request,deckId):
+    deck = Deck.objects.get(id=deckId)
+    deck.delete()
     return Response(status=status.HTTP_200_OK)

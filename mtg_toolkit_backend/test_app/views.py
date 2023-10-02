@@ -26,8 +26,8 @@ def get_all_decks(request):
     return Response(serializer.data)
 
 @api_view(['GET'])
-def test_card_specifc(request, requestedCardName):
-    cards = Card.objects.get(cardName=requestedCardName)
+def test_card_specifc(request, cardId):
+    cards = Card.objects.get(id=cardId)
     serializer = CardSerializer(cards, many=False)
     return Response(serializer.data)
 
@@ -38,16 +38,35 @@ def test_post_card(request):
     serializer.save()
     return Response(serializer.data)
 
+@api_view(['POST'])
+def create_deck(request):
+    deckSerializer = DeckSerializer(data=request.data)
+    deckSerializer.is_valid(raise_exception=True)
+    deck = deckSerializer.save()
+    cardIds = request.data['cardsToAdd']
+    for cardId in cardIds:
+        card = Card.objects.get(id=cardId)
+        card.decks.add(deck)
+    return Response(deckSerializer.data)
+
 @api_view(['PUT'])
-def test_put_card(request,requestedCardName):
-    card = Card.objects.get(cardName=requestedCardName)
+def test_put_card(request,cardId):
+    card = Card.objects.get(id=cardId)
     serializer = CardSerializer(card,request.data)
     serializer.is_valid(raise_exception=True)
     serializer.save()
     return Response(serializer.data)
 
+@api_view(['PUT'])
+def edit_deck(request,deckId):
+    deck = Deck.objects.get(id=deckId)
+    serializer = DeckSerializer(deck,request.data)
+    serializer.is_valid(raise_exception=True)
+    deck = serializer.save()
+    return Response(serializer.data)
+
 @api_view(['DELETE'])
-def test_delete_card(request,requestedCardName):
-    card = Card.objects.get(cardName=requestedCardName)
+def test_delete_card(request,cardId):
+    card = Card.objects.get(id=cardId)
     card.delete()
     return Response(status=status.HTTP_200_OK)

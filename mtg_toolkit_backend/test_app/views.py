@@ -6,7 +6,8 @@ from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
-
+import requests
+import json
 
 # Create your views here.
 
@@ -86,3 +87,13 @@ def delete_deck(request,deckId):
     deck = Deck.objects.get(id=deckId)
     deck.delete()
     return Response(status=status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def get_scryfall_cards(request):
+    url = "https://api.scryfall.com/bulk-data"
+    response = requests.get(url)
+    data = response.json()
+    cardResponse = requests.get(data['data'][2]['download_uri'])
+    cardData = cardResponse.json()
+    return Response(cardData)

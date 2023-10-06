@@ -4,10 +4,7 @@ from django.db import models
 
 
 class Card(models.Model):
-    cardName = models.CharField(default='', max_length=200)
-    text = models.TextField(default='')
-    type = models.CharField(default='', max_length=50)
-    colors = models.CharField(default='',max_length=10)
+    scryfallId = models.CharField(default='', max_length=200)
     def __str__(self):
         return self.cardName
     

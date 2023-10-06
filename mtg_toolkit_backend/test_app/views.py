@@ -14,30 +14,13 @@ from django.views.decorators.cache import cache_page
 
 @cache_page(60*15)
 @api_view(['GET'])
-def test_list(request):
-    cards = Card.objects.all()
-    serializer = CardSerializer(cards, many=True)
-    return Response(serializer.data)
-
-@cache_page(60*15)
-@api_view(['GET'])
 def get_all_decks(request):
     decks = Deck.objects.all()
     serializer = DeckSerializer(decks, many=True)
     return Response(serializer.data)
 
-@api_view(['GET'])
-def test_card_specifc(request, cardId):
-    cards = Card.objects.get(id=cardId)
-    serializer = CardSerializer(cards, many=False)
-    return Response(serializer.data)
-
-@api_view(['POST'])
-def test_post_card(request):
-    serializer = CardSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data)
+#Next step is how to call the get card api inside of this api
+#This is where I think we split it into services versus resources
 
 @api_view(['POST'])
 def create_deck(request):
@@ -45,18 +28,7 @@ def create_deck(request):
     deckSerializer.is_valid(raise_exception=True)
     deck = deckSerializer.save()
     cardIds = request.data['cardsToAdd']
-    for cardId in cardIds:
-        card = Card.objects.get(id=cardId)
-        deck.cards.add(card)
     return Response(deckSerializer.data)
-
-@api_view(['PUT'])
-def test_put_card(request,cardId):
-    card = Card.objects.get(id=cardId)
-    serializer = CardSerializer(card,request.data)
-    serializer.is_valid(raise_exception=True)
-    serializer.save()
-    return Response(serializer.data)
 
 @api_view(['PUT'])
 def edit_deck(request,deckId):
@@ -66,21 +38,7 @@ def edit_deck(request,deckId):
     deck = serializer.save()
     cardIdsToAdd = request.data['cardsToAdd']
     cardIdsToDelete = request.data['cardsToDelete']
-    for id in cardIdsToAdd:
-        if(id not in deck.cards.all()):
-            card = Card.objects.get(id=id)
-            deck.cards.add(card)
-    for id in cardIdsToDelete:
-        card = Card.objects.get(id=id)
-        deck.cards.remove(card)
-
     return Response(serializer.data)
-
-@api_view(['DELETE'])
-def test_delete_card(request,cardId):
-    card = Card.objects.get(id=cardId)
-    card.delete()
-    return Response(status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
 def delete_deck(request,deckId):

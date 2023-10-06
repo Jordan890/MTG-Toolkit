@@ -9,12 +9,9 @@ class CardAdmin(admin.ModelAdmin):
     model = Card
     readonly_fields = ('id',)
     fieldsets = [
-        (None,               {'fields': ['cardName']}),
-        (None,               {'fields': ['text']}),
-        (None,               {'fields': ['type']}),
-        (None,               {'fields': ['colors']})
+        (None,               {'fields': ['scryfallId']}),
     ]
-    list_display = ('id','cardName', 'text', 'type', 'colors')
+    list_display = ('id','scryfallId')
 
 class DeckAdmin(admin.ModelAdmin):
     model = Deck

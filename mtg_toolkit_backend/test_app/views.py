@@ -7,22 +7,22 @@ from django.http.response import JsonResponse
 from rest_framework.response import Response
 from rest_framework import status
 import requests
-import json
+from django.views.decorators.cache import cache_page
+
 
 # Create your views here.
 
+@cache_page(60*15)
 @api_view(['GET'])
 def test_list(request):
     cards = Card.objects.all()
     serializer = CardSerializer(cards, many=True)
     return Response(serializer.data)
 
+@cache_page(60*15)
 @api_view(['GET'])
 def get_all_decks(request):
     decks = Deck.objects.all()
-    for deck in decks:
-        for card in deck.card_set.all():
-            print(card)
     serializer = DeckSerializer(decks, many=True)
     return Response(serializer.data)
 
@@ -88,7 +88,7 @@ def delete_deck(request,deckId):
     deck.delete()
     return Response(status=status.HTTP_200_OK)
 
-
+@cache_page(60*15)
 @api_view(['GET'])
 def get_scryfall_cards(request):
     url = "https://api.scryfall.com/bulk-data"
@@ -97,3 +97,11 @@ def get_scryfall_cards(request):
     cardResponse = requests.get(data['data'][2]['download_uri'])
     cardData = cardResponse.json()
     return Response(cardData)
+
+@cache_page(60*15)
+@api_view(['GET'])
+def get_card_by_id(request, id):
+    url = "https://api.scryfall.com/cards/" + id
+    response = requests.get(url)
+    data = response.json()
+    return Response(data)

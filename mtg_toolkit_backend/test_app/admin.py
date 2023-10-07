@@ -1,17 +1,15 @@
 from django.contrib import admin
-from .models import Card, Deck
+from .models import *
 # Register your models here.
-
-class CardInline(admin.TabularInline):
-    model = Deck.cards.through
 
 class CardAdmin(admin.ModelAdmin):
     model = Card
     readonly_fields = ('id',)
     fieldsets = [
+        (None,               {'fields': ['cardName']}),
         (None,               {'fields': ['scryfallId']}),
     ]
-    list_display = ('id','scryfallId')
+    list_display = ('id','scryfallId','cardName')
 
 class DeckAdmin(admin.ModelAdmin):
     model = Deck
@@ -21,7 +19,15 @@ class DeckAdmin(admin.ModelAdmin):
         (None,                {'fields': ['owner']})
     ]
     list_display = ('id','deckName', 'owner')
-    inlines = [CardInline,]
+
+class CartToDeckAdmin(admin.ModelAdmin):
+    model = CardToDeck
+    readonly_fields = ('id',)
+    fieldsets = [
+        (None,                {'fields': ['quantity']}),
+    ]
+    list_display = ('id', 'quantity')
 
 admin.site.register(Card, CardAdmin)
 admin.site.register(Deck, DeckAdmin)
+admin.site.register(CardToDeck,CartToDeckAdmin)

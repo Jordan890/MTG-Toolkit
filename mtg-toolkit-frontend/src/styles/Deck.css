@@ -1,0 +1,30 @@
+.container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    flex-direction: row;
+    padding-top: 10px;
+}
+
+.deckLayout {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.sameRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.cardImage {
+    width: 300px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    align-items: center;
+}

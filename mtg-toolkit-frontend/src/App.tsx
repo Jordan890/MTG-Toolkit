@@ -1,5 +1,4 @@
 
-import Home from './Home'
 import DeckViewer from './components/DeckViewer';
 
 function App(){

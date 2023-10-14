@@ -1,5 +1,14 @@
+import Deck from "./Deck";
+
 function DeckViewer(){
-    return <h1>Welcom To DeckViewer</h1>
+    return (
+        <>
+        <div>
+            <div><Deck/></div>
+            <div><Deck/></div>
+        </div>
+        </>
+    )
 }
 
 export default DeckViewer;
